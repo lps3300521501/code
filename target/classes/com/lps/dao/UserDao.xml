@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lps.dao.UserDao">
+ 
+    <!--配置查询结果的列名和实体类的属性名的对应关系,id是一个唯一标志可以随便写，type是对应的实体类-->
+    <resultMap id="usermap" type="com.lps.domain.User">
+        <!--主键字段对应,property实体类的属性，column数据库的列名-->
+        <id property="userid" column="id"></id>
+        <!--非主键的对应-->
+        <result property="usersex" column="sex"></result>
+        <result property="usernameadderess" column="adderess"></result>
+        <result property="userbrithday" column="brithday"></result>
+    </resultMap>
+ 
+ 
+ 
+ 
+    <!--配置查询所有-->
+    <select id="findAll" resultType="com.lps.domain.User" resultMap="usermap">
+--         select id as userid,username as username,address as useraddress,sex as usersex,birthday as userbirthday  from user
+        select * from user
+    </select>
+    <!--parameterType 是参数的类型 这里是User类型-->
+    <insert id="saveUser" parameterType="com.lps.domain.User">
+        <selectKey keyColumn="id" resultType="int" keyProperty="id" order="AFTER">
+            select last_insert_id();
+        </selectKey>
+
+
+
+            insert into user(username,birthday,sex,address)values(#{username},#{birthday},#{sex},#{address});
+    </insert>
+
+    <update id="updateUser" parameterType="com.lps.domain.User">
+        update user set username=#{username},address=#{address},sex=#{sex},birthday=#{birthday} where id = #{id}
+    </update>
+
+    <delete id="deleteUser" parameterType="Integer">
+        delete from user where id = #{suibianxie}
+    </delete>
+    <!--参数类型 int  封装到User中-->
+    <select id="findById" parameterType="INT" resultType="com.lps.domain.User">
+        select * from user where id = #{suibainxie}
+    </select>
+
+    <select id="findByname" resultType="com.lps.domain.User" parameterType="String">
+        select * from user where username like  #{uname}
+    </select>
+
+    <select id="findCount" resultType="int" parameterType="int">
+        select count(id) from user ;
+    </select>
+
+    <select id="findUserByVo" resultType="com.lps.domain.User" parameterType="com.lps.domain.OnglVo">
+        select * from user where username like  #{user.username}
+
+    </select>
+
+</mapper>
